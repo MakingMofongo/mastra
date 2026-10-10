@@ -1,5 +1,28 @@
 # @mastra/loggers
 
+## 1.3.6-alpha.4
+
+### Patch Changes
+
+- `UpstashTransport` now keeps a limited number of records in memory while Upstash is unreachable, instead of growing without limit. ([#26605](https://github.com/mastra-ai/mastra/pull/26605))
+
+  - The new `maxBufferSize` option limits how many unsent records are kept in memory. It must be a positive integer. It defaults to `maxListLength`, or 10000 when `maxListLength` turns off trimming.
+  - When the buffer is full, the oldest records are dropped. The new `droppedRecords` field counts them.
+  - Only one request is sent to Upstash at a time, so many writes during an outage no longer open hundreds of requests.
+
+  ```ts
+  const transport = new UpstashTransport({
+    upstashUrl: process.env.UPSTASH_URL!,
+    upstashToken: process.env.UPSTASH_TOKEN!,
+    maxBufferSize: 5000,
+  });
+
+  console.log(transport.droppedRecords);
+  ```
+
+- Updated dependencies [[`25b8b60`](https://github.com/mastra-ai/mastra/commit/25b8b6074cbb5f0c744e4edb4ce0c5ee1f3771d6), [`e5688d2`](https://github.com/mastra-ai/mastra/commit/e5688d2945aff1e867eb8b9fc5f25393d6579216), [`eda5b00`](https://github.com/mastra-ai/mastra/commit/eda5b0081bdc49cc17ac8fc1267fccabb5e7a33f), [`a2d52e1`](https://github.com/mastra-ai/mastra/commit/a2d52e1d6a1542e3eb994853145ffd113fd02c2f), [`180bdc5`](https://github.com/mastra-ai/mastra/commit/180bdc5398e253ffae7eaff6330409d7f5254f8b), [`45a1ab7`](https://github.com/mastra-ai/mastra/commit/45a1ab7f300637be9d5b953d82b58f77b64c1b56)]:
+  - @mastra/core@1.76.0-alpha.8
+
 ## 1.3.6-alpha.3
 
 ### Patch Changes
